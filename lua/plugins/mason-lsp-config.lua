@@ -2,7 +2,7 @@ return {
     "mason-org/mason-lspconfig.nvim",
     opts = {
         -- ensure_installed = {"c", "lua", "vim", "vimdoc", "python","go", "goctl", "gomod", "gosum", "gotmpl", "gowork", "java", "javascript", "json", "yaml", "xml", "powershell"},
-        ensure_installed = {"python-lsp-server", "clang-format", "luau-lsp", "gofumpt", "goimports", "golangci-lint", "golangci-lint-langserver", "gomodifytags", "gopls", "json-lsp", "yaml-language-server", "xmlformatter"}
+        ensure_installed = {"python-lsp-server", "clang-format", "luau-lsp", "gofumpt", "goimports", "golangci-lint", "golangci-lint-langserver", "gomodifytags", "gopls", "json-lsp"}
     },
     dependencies = {
         { "mason-org/mason.nvim", opts = {} },

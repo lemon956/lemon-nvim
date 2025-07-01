@@ -1,5 +1,5 @@
 ---@diagnostic disable-next-line: undefined-global
-vim = vim or {}
+local vim = vim
 
 -- ============================================
 -- Neovim 快捷键配置
@@ -56,27 +56,6 @@ map("n", "<leader>Y", '"+Y', { desc = "复制整行到系统剪贴板" })
 -- 从系统剪贴板粘贴
 map("n", "<leader>p", '"+p', { desc = "从系统剪贴板粘贴" })
 map("v", "<leader>p", '"+p', { desc = "从系统剪贴板粘贴" })
-
--- ============================================
--- 窗口管理
--- ============================================
-
--- 分割窗口
-map("n", "<leader>sv", "<cmd>vsplit<cr>", { desc = "垂直分割窗口" })
-map("n", "<leader>sh", "<cmd>split<cr>", { desc = "水平分割窗口" })
-map("n", "<leader>sc", "<cmd>close<cr>", { desc = "关闭当前窗口" })
-
--- 窗口导航
-map("n", "<C-h>", "<C-w>h", { desc = "移动到左侧窗口" })
-map("n", "<C-j>", "<C-w>j", { desc = "移动到下方窗口" })
-map("n", "<C-k>", "<C-w>k", { desc = "移动到上方窗口" })
-map("n", "<C-l>", "<C-w>l", { desc = "移动到右侧窗口" })
-
--- 调整窗口大小
-map("n", "<C-Up>", "<cmd>resize +2<cr>", { desc = "增加窗口高度" })
-map("n", "<C-Down>", "<cmd>resize -2<cr>", { desc = "减少窗口高度" })
-map("n", "<C-Left>", "<cmd>vertical resize -2<cr>", { desc = "减少窗口宽度" })
-map("n", "<C-Right>", "<cmd>vertical resize +2<cr>", { desc = "增加窗口宽度" })
 
 -- ============================================
 -- 缓冲区管理
@@ -168,22 +147,6 @@ map("n", "<leader>sv", function()
 end, { desc = "重新加载配置" })
 
 -- ============================================
--- 终端快捷键
--- ============================================
-
--- 打开终端
-map("n", "<leader>tt", "<cmd>terminal<cr>", { desc = "打开终端" })
-map("n", "<leader>tv", "<cmd>vsplit | terminal<cr>", { desc = "垂直分割打开终端" })
-map("n", "<leader>th", "<cmd>split | terminal<cr>", { desc = "水平分割打开终端" })
-
--- 终端模式下的快捷键
-map("t", "<Esc>", "<C-\\><C-n>", { desc = "退出终端模式" })
-map("t", "<C-h>", "<C-\\><C-n><C-w>h", { desc = "终端模式下移动到左侧窗口" })
-map("t", "<C-j>", "<C-\\><C-n><C-w>j", { desc = "终端模式下移动到下方窗口" })
-map("t", "<C-k>", "<C-\\><C-n><C-w>k", { desc = "终端模式下移动到上方窗口" })
-map("t", "<C-l>", "<C-\\><C-n><C-w>l", { desc = "终端模式下移动到右侧窗口" })
-
--- ============================================
 -- 诊断快捷键（LSP 相关）
 -- ============================================
 
@@ -218,6 +181,12 @@ map("n", "<Up>", "<Nop>", { desc = "禁用上方向键" })
 map("n", "<Down>", "<Nop>", { desc = "禁用下方向键" })
 map("n", "<Left>", "<Nop>", { desc = "禁用左方向键" })
 map("n", "<Right>", "<Nop>", { desc = "禁用右方向键" })
+
+-- telescope plugin
+map('n', '<leader>ff', '<cmd>Telescope find_files<cr>', { desc = '搜索文件' })
+map('n', '<leader>fg', '<cmd>Telescope live_grep<cr>', { desc = '搜索文件' })
+map('n', '<leader>fb', '<cmd>Telescope buffers<cr>', { desc = '搜索缓冲区' })
+map('n', '<leader>fh', '<cmd>Telescope help_tags<cr>', { desc = '搜索帮助标签' })
 
 -- 快速替换
 map("n", "<leader>rw", ":%s/\\<<C-r><C-w>\\>/", { desc = "替换当前单词" })
