@@ -191,6 +191,16 @@ map('n', '<leader>fh', '<cmd>Telescope help_tags<cr>', { desc = '搜索帮助标
 -- 快速替换
 map("n", "<leader>rw", ":%s/\\<<C-r><C-w>\\>/", { desc = "替换当前单词" })
 
+
+-- lspsaga
+map("n", "<leader>gd", "<cmd>Lspsaga goto_definition<cr>", { desc = "跳转到定义" })
+map("n", "<leader>lf", "<cmd>Lspsaga finder<cr>", { desc = "LSP 查找" })
+map("n", "<leader>t", "<cmd>Lspsaga term_toggle<cr>", { desc = "子终端" })
+map("n", "<leader>K", "<cmd>Lspsaga hover_doc<cr>", { desc = "打开悬浮窗口"})
+map("n", "<leader>ic", "<cmd>Lspsaga incoming_calls<cr>", { desc = "查看调用" })
+map("n", "<leader>oc", "<cmd>Lspsaga outgoing_calls<cr>", { desc = "查看被调用" })
+
+
 -- 显示快捷键帮助
 map("n", "<leader>?", function()
     vim.cmd("help")
