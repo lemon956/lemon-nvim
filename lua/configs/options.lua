@@ -29,6 +29,11 @@ vim.opt.smartcase = true -- but make it case sensitive if an uppercase is entere
 -- Always show the signcolumn, otherwise it would shift the text each time
 -- The problem manifests itself as flickering and jittering of the window
 vim.opt.signcolumn = "yes"
+
+-- set auto read buffer when it changed outside
+vim.o.autoread = true
+vim.bo.autoread = true
+
 -- nvim-tree
 -- disable netrw at the very start of your init.lua
 vim.g.loaded_netrw = 1

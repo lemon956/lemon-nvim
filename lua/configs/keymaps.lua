@@ -201,6 +201,9 @@ map("n", "<leader>ic", "<cmd>Lspsaga incoming_calls<cr>", { desc = "查看调用
 map("n", "<leader>oc", "<cmd>Lspsaga outgoing_calls<cr>", { desc = "查看被调用" })
 
 
+-- formatter
+map("n", "<leader>F", "<cmd>Format<cr>", { desc = "格式化代码" })
+
 -- 显示快捷键帮助
 map("n", "<leader>?", function()
     vim.cmd("help")
