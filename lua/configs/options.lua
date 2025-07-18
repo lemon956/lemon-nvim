@@ -26,6 +26,9 @@ vim.opt.hlsearch = false -- do not highlight matches
 vim.opt.ignorecase = true -- ignore case in searches by default
 vim.opt.smartcase = true -- but make it case sensitive if an uppercase is entered
 
+-- Always show the signcolumn, otherwise it would shift the text each time
+-- The problem manifests itself as flickering and jittering of the window
+vim.opt.signcolumn = "yes"
 -- nvim-tree
 -- disable netrw at the very start of your init.lua
 vim.g.loaded_netrw = 1
