@@ -1,4 +1,16 @@
 return {
     "mason-org/mason.nvim",
-    opts = {}
+    cmd = "Mason",
+    build = ":MasonUpdate",
+    config = function()
+        require("mason").setup({
+            ui = {
+                icons = {
+                    package_installed = "✓",
+                    package_pending = "➜",
+                    package_uninstalled = "✗"
+                }
+            }
+        })
+    end,
 }

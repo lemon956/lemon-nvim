@@ -72,6 +72,28 @@ map("n", "<leader>tc", "<cmd>tabclose<cr>", { desc = "关闭标签页" })
 map("n", "<leader>to", "<cmd>tabonly<cr>", { desc = "只保留当前标签页" })
 
 -- ============================================
+-- 窗口管理（分屏）
+-- ============================================
+
+-- 分屏
+map("n", "<leader>sv", "<cmd>vsplit<cr>", { desc = "垂直分屏" })
+map("n", "<leader>sh", "<cmd>split<cr>", { desc = "水平分屏" })
+map("n", "<leader>se", "<C-w>=", { desc = "均分窗口大小" })
+map("n", "<leader>sx", "<cmd>close<cr>", { desc = "关闭当前窗口" })
+
+-- 窗口导航
+map("n", "<C-h>", "<C-w>h", { desc = "移动到左侧窗口" })
+map("n", "<C-j>", "<C-w>j", { desc = "移动到下方窗口" })
+map("n", "<C-k>", "<C-w>k", { desc = "移动到上方窗口" })
+map("n", "<C-l>", "<C-w>l", { desc = "移动到右侧窗口" })
+
+-- 窗口大小调整
+map("n", "<C-Up>", "<cmd>resize +2<cr>", { desc = "增加窗口高度" })
+map("n", "<C-Down>", "<cmd>resize -2<cr>", { desc = "减少窗口高度" })
+map("n", "<C-Left>", "<cmd>vertical resize -2<cr>", { desc = "减少窗口宽度" })
+map("n", "<C-Right>", "<cmd>vertical resize +2<cr>", { desc = "增加窗口宽度" })
+
+-- ============================================
 -- 搜索和导航
 -- ============================================
 
@@ -140,11 +162,6 @@ map("n", "<leader>ev", function()
     vim.cmd("edit " .. vim.fn.stdpath("config") .. "/init.lua")
 end, { desc = "编辑配置文件" })
 
--- 重新加载配置
-map("n", "<leader>sv", function()
-    vim.cmd("source " .. vim.fn.stdpath("config") .. "/init.lua")
-    vim.notify("配置已重新加载", vim.log.levels.INFO)
-end, { desc = "重新加载配置" })
 
 -- ============================================
 -- 诊断快捷键（LSP 相关）
@@ -192,11 +209,22 @@ map('n', '<leader>fh', '<cmd>Telescope help_tags<cr>', { desc = '搜索帮助标
 map("n", "<leader>rw", ":%s/\\<<C-r><C-w>\\>/", { desc = "替换当前单词" })
 
 
--- lspsaga
+-- ============================================
+-- LSP 快捷键（在 LSP attach 时会自动设置）
+-- ============================================
+-- gd - 跳转到定义 (Go to Definition)
+-- gD - 跳转到声明 (Go to Declaration)
+-- gi - 跳转到实现 (Go to Implementation)
+-- gr - 显示引用 (Show References)
+-- K - 悬浮文档 (Hover Documentation)
+-- <leader>rn - 重命名 (Rename)
+-- <leader>ca - 代码操作 (Code Action)
+
+-- Lspsaga keymaps (optional, will override default LSP keymaps if lspsaga is available)
+map("n", "K", "<cmd>Lspsaga hover_doc<cr>", { desc = "悬浮文档" })
 map("n", "<leader>gd", "<cmd>Lspsaga goto_definition<cr>", { desc = "跳转到定义" })
 map("n", "<leader>gf", "<cmd>Lspsaga finder<cr>", { desc = "LSP 查找" })
 map("n", "<leader>t", "<cmd>Lspsaga term_toggle<cr>", { desc = "子终端" })
-map("n", "<leader>K", "<cmd>Lspsaga hover_doc<cr>", { desc = "打开悬浮窗口"})
 map("n", "<leader>ic", "<cmd>Lspsaga incoming_calls<cr>", { desc = "查看调用" })
 map("n", "<leader>oc", "<cmd>Lspsaga outgoing_calls<cr>", { desc = "查看被调用" })
 
