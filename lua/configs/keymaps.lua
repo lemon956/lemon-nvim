@@ -232,6 +232,12 @@ map("n", "<leader>oc", "<cmd>Lspsaga outgoing_calls<cr>", { desc = "查看被调
 -- formatter
 map("n", "<leader>F", "<cmd>Format<cr>", { desc = "格式化代码" })
 
+-- Git 相关快捷键
+vim.keymap.set("n", "<leader>gg", ":LazyGit<CR>")             -- 打开 lazygit
+vim.keymap.set("n", "<leader>gh", ":DiffviewFileHistory<CR>") -- 查看 commit history
+vim.keymap.set("n", "<leader>gD", ":DiffviewOpen<CR>")        -- 查看 diff (原来的 gd 改成 gD)
+vim.keymap.set("n", "<leader>gb", ":Git blame<CR>")           -- blame
+
 -- 显示快捷键帮助
 map("n", "<leader>?", function()
     vim.cmd("help")
