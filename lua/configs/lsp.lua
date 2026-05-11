@@ -33,21 +33,21 @@ local function on_attach(client, bufnr)
     local has_lspsaga = pcall(require, "lspsaga")
 
     -- Basic LSP keybindings
-    buf_map("n", "gd", vim.lsp.buf.definition, { desc = "Go to definition" })
-    buf_map("n", "gD", vim.lsp.buf.declaration, { desc = "Go to declaration" })
-    buf_map("n", "gi", vim.lsp.buf.implementation, { desc = "Go to implementation" })
-    buf_map("n", "gr", vim.lsp.buf.references, { desc = "Show references" })
+    buf_map("n", "gd", vim.lsp.buf.definition, { desc = "跳转到定义 (Go to definition)" })
+    buf_map("n", "gD", vim.lsp.buf.declaration, { desc = "跳转到声明 (Go to declaration)" })
+    buf_map("n", "gi", vim.lsp.buf.implementation, { desc = "跳转到实现 (Go to implementation)" })
+    buf_map("n", "gr", vim.lsp.buf.references, { desc = "显示引用 (Show references)" })
     
     -- Only map K if lspsaga is not available (lspsaga uses <leader>K)
     if not has_lspsaga then
-        buf_map("n", "K", vim.lsp.buf.hover, { desc = "Hover documentation" })
+        buf_map("n", "K", vim.lsp.buf.hover, { desc = "悬浮文档 (Hover documentation)" })
     end
     
-    buf_map("n", "<leader>rn", vim.lsp.buf.rename, { desc = "Rename" })
-    buf_map("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code action" })
+    buf_map("n", "<leader>rn", vim.lsp.buf.rename, { desc = "重命名 (Rename)" })
+    buf_map("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "代码操作 (Code action)" })
     buf_map("n", "<leader>f", function()
         vim.lsp.buf.format({ async = true })
-    end, { desc = "Format code" })
+    end, { desc = "格式化代码 (Format code)" })
 end
 
 -- LSP capabilities (for completion)
