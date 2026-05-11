@@ -221,12 +221,50 @@ map("n", "<leader>rw", ":%s/\\<<C-r><C-w>\\>/", { desc = "替换当前单词" })
 -- <leader>ca - 代码操作 (Code Action)
 
 -- Lspsaga keymaps (optional, will override default LSP keymaps if lspsaga is available)
+local function lspsaga_symbol_finder()
+    vim.cmd("Lspsaga finder def+ref")
+end
+
+local function lspsaga_call_or_symbol_finder(call_command)
+    return function()
+        local bufnr = vim.api.nvim_get_current_buf()
+        local prepare_method = "textDocument/prepareCallHierarchy"
+        local clients = vim.lsp.get_clients({ bufnr = bufnr, method = prepare_method })
+
+        if #clients == 0 then
+            lspsaga_symbol_finder()
+            return
+        end
+
+        local params = vim.lsp.util.make_position_params(0, clients[1].offset_encoding or "utf-16")
+        vim.lsp.buf_request_all(bufnr, prepare_method, params, function(results)
+            local has_call_hierarchy = false
+
+            for _, response in pairs(results or {}) do
+                local result = response.result
+                if type(result) == "table" and not vim.tbl_isempty(result) then
+                    has_call_hierarchy = true
+                    break
+                end
+            end
+
+            vim.schedule(function()
+                if has_call_hierarchy then
+                    vim.cmd("Lspsaga " .. call_command)
+                else
+                    lspsaga_symbol_finder()
+                end
+            end)
+        end)
+    end
+end
+
 map("n", "K", "<cmd>Lspsaga hover_doc<cr>", { desc = "悬浮文档" })
 map("n", "<leader>gd", "<cmd>Lspsaga goto_definition<cr>", { desc = "跳转到定义" })
 map("n", "<leader>gf", "<cmd>Lspsaga finder<cr>", { desc = "LSP 查找" })
 map("n", "<leader>t", "<cmd>Lspsaga term_toggle<cr>", { desc = "子终端" })
-map("n", "<leader>ic", "<cmd>Lspsaga incoming_calls<cr>", { desc = "查看调用" })
-map("n", "<leader>oc", "<cmd>Lspsaga outgoing_calls<cr>", { desc = "查看被调用" })
+map("n", "<leader>ic", lspsaga_call_or_symbol_finder("incoming_calls"), { desc = "查看调用/变量引用" })
+map("n", "<leader>oc", lspsaga_call_or_symbol_finder("outgoing_calls"), { desc = "查看被调用/变量引用" })
 
 
 -- formatter
@@ -249,18 +287,23 @@ end, { desc = "显示帮助" })
 
 -- 创建一些有用的命令
 vim.api.nvim_create_user_command("ReloadConfig", function()
-    for name, _ in pairs(package.loaded) do
-        if name:match("^configs") or name:match("^plugins") then
-            package.loaded[name] = nil
-        end
+    local modules = {
+        "configs.options",
+        "configs.keymaps",
+        "configs.lsp",
+    }
+
+    for _, name in ipairs(modules) do
+        package.loaded[name] = nil
+        require(name)
     end
-    dofile(vim.env.MYVIMRC)
+
     vim.notify("配置已重新加载!", vim.log.levels.INFO)
-end, { desc = "重新加载配置" })
+end, { desc = "重新加载配置", force = true })
 
 vim.api.nvim_create_user_command("ShowKeymaps", function()
     vim.cmd("Telescope keymaps")
-end, { desc = "显示所有快捷键" })
+end, { desc = "显示所有快捷键", force = true })
 
 -- 添加快捷键来调用这些命令
 map("n", "<leader>rc", "<cmd>ReloadConfig<cr>", { desc = "重新加载配置" })
