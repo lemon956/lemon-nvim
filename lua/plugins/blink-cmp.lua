@@ -1,3 +1,6 @@
+local termux = require("configs.termux")
+local fuzzy_implementation = termux.is_termux() and "lua" or "prefer_rust_with_warning"
+
 return {
     {
         "saghen/blink.cmp",
@@ -58,7 +61,7 @@ return {
             -- when the Rust fuzzy matcher is not available, by using `implementation = "prefer_rust"`
             --
             -- See the fuzzy documentation for more information
-            fuzzy = { implementation = "prefer_rust_with_warning" },
+            fuzzy = { implementation = fuzzy_implementation },
             completion = {
                 -- The keyword should only match against the text before
                 keyword = { range = "prefix" },
