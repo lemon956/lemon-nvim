@@ -160,6 +160,8 @@ local function diff_unsaved()
     vim.bo[disk_buf].swapfile = false
     vim.bo[disk_buf].filetype = vim.bo[source_buf].filetype
     vim.api.nvim_buf_set_name(disk_buf, "disk://" .. disk_buf .. ":" .. file_path)
+    vim.b[disk_buf].diff_unsaved_source_buf = source_buf
+    vim.b[source_buf].diff_unsaved_disk_buf = disk_buf
 
     local lines = vim.fn.readfile(file_path)
     vim.api.nvim_buf_set_lines(disk_buf, 0, -1, false, lines)
@@ -173,12 +175,65 @@ local function diff_unsaved()
     vim.notify("已打开未保存改动 diff。关闭窗口或执行 :diffoff! 可退出。", vim.log.levels.INFO)
 end
 
+local function is_diff_unsaved_buffer(bufnr)
+    local name = vim.api.nvim_buf_get_name(bufnr)
+    return name:match("^disk://") ~= nil
+end
+
+local function diff_unsaved_close()
+    local current_buf = vim.api.nvim_get_current_buf()
+    local source_buf = vim.b[current_buf].diff_unsaved_source_buf or current_buf
+    local disk_buf = vim.b[source_buf].diff_unsaved_disk_buf
+
+    if disk_buf == nil and is_diff_unsaved_buffer(current_buf) then
+        disk_buf = current_buf
+    end
+
+    local source_win
+    local closed = false
+
+    for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+        local bufnr = vim.api.nvim_win_get_buf(win)
+
+        if bufnr == source_buf then
+            source_win = win
+            vim.wo[win].diff = false
+        end
+
+        if bufnr == disk_buf or is_diff_unsaved_buffer(bufnr) then
+            vim.api.nvim_win_close(win, true)
+            closed = true
+        end
+    end
+
+    if source_win ~= nil and vim.api.nvim_win_is_valid(source_win) then
+        vim.api.nvim_set_current_win(source_win)
+        vim.wo[source_win].diff = false
+    end
+
+    if vim.api.nvim_buf_is_valid(source_buf) then
+        vim.b[source_buf].diff_unsaved_disk_buf = nil
+    end
+
+    if closed then
+        vim.notify("已关闭未保存改动 diff。", vim.log.levels.INFO)
+    else
+        vim.notify("没有打开的未保存改动 diff。", vim.log.levels.INFO)
+    end
+end
+
 vim.api.nvim_create_user_command("DiffUnsaved", diff_unsaved, {
     desc = "查看未保存改动 (Diff unsaved changes)",
     force = true,
 })
 
+vim.api.nvim_create_user_command("DiffUnsavedClose", diff_unsaved_close, {
+    desc = "关闭未保存改动 diff (Close unsaved diff)",
+    force = true,
+})
+
 map("n", "<leader>du", "<cmd>DiffUnsaved<cr>", { desc = "查看未保存改动 (Diff unsaved changes)" })
+map("n", "<leader>dc", "<cmd>DiffUnsavedClose<cr>", { desc = "关闭未保存改动 diff (Close unsaved diff)" })
 
 -- 显示文件路径
 map("n", "<leader>fp", function()

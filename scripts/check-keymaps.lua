@@ -84,13 +84,17 @@ test("unsaved diff keymap is explicit and U keeps default behavior", function()
     require("configs.keymaps")
 
     local diff_unsaved = vim.fn.maparg("<leader>du", "n", false, true)
+    local diff_unsaved_close = vim.fn.maparg("<leader>dc", "n", false, true)
     local undo = vim.fn.maparg("U", "n", false, true)
     local commands = vim.api.nvim_get_commands({})
 
     assert_equal(diff_unsaved.rhs, "<cmd>DiffUnsaved<cr>", "du should open unsaved diff")
     assert_equal(diff_unsaved.desc, "查看未保存改动 (Diff unsaved changes)", "du desc should explain unsaved diff")
+    assert_equal(diff_unsaved_close.rhs, "<cmd>DiffUnsavedClose<cr>", "dc should close unsaved diff")
+    assert_equal(diff_unsaved_close.desc, "关闭未保存改动 diff (Close unsaved diff)", "dc desc should explain closing unsaved diff")
     assert_equal(undo.rhs, nil, "U should keep Neovim default line-undo behavior")
     assert_truthy(commands.DiffUnsaved ~= nil, "DiffUnsaved command must exist")
+    assert_truthy(commands.DiffUnsavedClose ~= nil, "DiffUnsavedClose command must exist")
 end)
 
 test("DiffUnsaved opens a persistent diff split", function()
@@ -127,6 +131,40 @@ test("DiffUnsaved opens a persistent diff split", function()
         assert_truthy(disk_buf ~= nil, "DiffUnsaved must create disk buffer")
         assert_equal(vim.bo[disk_buf].buftype, "nofile", "disk buffer must be scratch")
         assert_equal(vim.api.nvim_buf_get_lines(disk_buf, 0, -1, false)[1], "disk line", "disk buffer must show saved file")
+    end)
+
+    vim.cmd("silent! diffoff!")
+    vim.cmd("silent! %bwipeout!")
+    vim.cmd("cd " .. vim.fn.fnameescape(original_cwd))
+    vim.fn.delete(path)
+
+    if not ok then
+        error(err, 0)
+    end
+end)
+
+test("DiffUnsavedClose closes the scratch diff and keeps the source window", function()
+    package.loaded["configs.keymaps"] = nil
+    require("configs.keymaps")
+
+    local original_cwd = vim.fn.getcwd()
+    local path = "/tmp/lemon-nvim-diff-unsaved-close-test.txt"
+    vim.fn.writefile({ "disk line" }, path)
+
+    local ok, err = pcall(function()
+        vim.cmd("edit " .. vim.fn.fnameescape(path))
+        local source_buf = vim.api.nvim_get_current_buf()
+        vim.api.nvim_buf_set_lines(source_buf, 0, -1, false, { "buffer line" })
+
+        vim.cmd("DiffUnsaved")
+        assert_truthy(#vim.api.nvim_tabpage_list_wins(0) >= 2, "DiffUnsaved must open another window before close")
+        assert_equal(vim.wo[vim.api.nvim_get_current_win()].diff, true, "source window must enter diff mode before close")
+
+        vim.cmd("DiffUnsavedClose")
+
+        assert_equal(vim.api.nvim_get_current_buf(), source_buf, "DiffUnsavedClose must keep source buffer current")
+        assert_equal(#vim.api.nvim_tabpage_list_wins(0), 1, "DiffUnsavedClose must close scratch diff window")
+        assert_equal(vim.wo[vim.api.nvim_get_current_win()].diff, false, "DiffUnsavedClose must leave diff mode")
     end)
 
     vim.cmd("silent! diffoff!")
