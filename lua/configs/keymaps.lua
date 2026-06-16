@@ -337,6 +337,9 @@ map("n", "<leader>sr", "<cmd>Lspsaga finder ref<cr>", { desc = "查看符号引�
 -- formatter
 map("n", "<leader>F", "<cmd>Format<cr>", { desc = "格式化代码 (Format code)" })
 
+-- render-markdown：切换 markdown 预览/编辑
+map("n", "<leader>mp", "<cmd>RenderMarkdown buf_toggle<cr>", { desc = "切换 Markdown 预览/编辑 (Toggle markdown render)" })
+
 -- Git 相关快捷键
 vim.keymap.set("n", "<leader>gg", ":LazyGit<CR>", { desc = "打开 LazyGit (Open LazyGit)" })
 vim.keymap.set("n", "<leader>gh", ":DiffviewFileHistory<CR>", { desc = "查看提交历史 (View file history)" })
