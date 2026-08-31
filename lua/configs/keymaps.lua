@@ -344,6 +344,7 @@ map("n", "<leader>mp", "<cmd>RenderMarkdown buf_toggle<cr>", { desc = "切换 Ma
 vim.keymap.set("n", "<leader>gg", ":LazyGit<CR>", { desc = "打开 LazyGit (Open LazyGit)" })
 vim.keymap.set("n", "<leader>gh", ":DiffviewFileHistory<CR>", { desc = "查看提交历史 (View file history)" })
 vim.keymap.set("n", "<leader>gD", ":DiffviewOpen<CR>", { desc = "查看 Git diff (View Git diff)" })
+vim.keymap.set("n", "<leader>gm", ":CodeDiff<CR>", { desc = "处理 Git 合并冲突 (Resolve Git merge conflicts)" })
 vim.keymap.set("n", "<leader>gb", ":Git blame<CR>", { desc = "查看 Git blame (View Git blame)" })
 
 -- 显示快捷键帮助
